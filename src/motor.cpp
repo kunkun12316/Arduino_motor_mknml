@@ -126,7 +126,7 @@ void setup()
   stepper1.begin(RPM1, MICROSTEPS1);
   stepper2.begin(RPM2, MICROSTEPS2);
   stepper3.begin(RPM3, MICROSTEPS3);
-  stepper3.setSpeedProfile(mode_3, 2000, 2000);
+  stepper3.setSpeedProfile(static_cast<BasicStepperDriver::Mode>(mode_3), 2000, 2000);
   // 使能步进电机驱动器的ENABLE脚，让电机得电。
   //     stepper1.enable();
   //     stepper2.enable();
@@ -330,7 +330,7 @@ void process()
 
     // 得到新的位置命令，要考虑上一个位置命令可能还在执行
     doorPosition = doorPosition - stepper3.getDirection() * stepper3.getStepsCompleted(); // 计算出基础位置
-    if(time_data)
+    if (time_data)
     {
       Serial.println("little door close!");
       // stepper3.stop();                                                                      // 先停下来
@@ -340,7 +340,7 @@ void process()
     }
 
     if (digitalRead(D_PIN) == LOW) //
-    {                          // 等待后进入电机开启状态
+    {                              // 等待后进入电机开启状态
       currentState = theGondolaDescends;
       time_data = true;
       Serial.println("diaoxiang down!");
@@ -350,7 +350,7 @@ void process()
   case theGondolaDescends: // 吊箱下降
 
     zPosition = zPosition - stepper1.getDirection() * stepper1.getStepsCompleted(); // 计算出基础位置
-    if(time_data)
+    if (time_data)
     {
       // stepper1.stop(); // 先停下来
       // stepper2.stop();
@@ -360,9 +360,8 @@ void process()
       time_data = false;
     }
 
-
     if (stepper1.getStepsCompleted() >= 78000)
-    {                          // 等待后进入电机开启状态
+    { // 等待后进入电机开启状态
       currentState = thePartitionOpens;
       time_data = true;
       Serial.println("diaoxiang down!");
@@ -383,8 +382,8 @@ void process()
     stateDuration = now - stateStartTime;
     if (stateDuration >= 7000) // 7000
     {
-      digitalWrite(SHELF_OFF_PIN, LOW); //推杆停止工作
-      digitalWrite(SHELF_ON_PIN, LOW); // 
+      digitalWrite(SHELF_OFF_PIN, LOW); // 推杆停止工作
+      digitalWrite(SHELF_ON_PIN, LOW);  //
 
       currentState = thePartitionIsClosed;
       time_frist = true;
@@ -406,8 +405,8 @@ void process()
     stateDuration = now - stateStartTime;
     if (stateDuration >= 7000) // 7000
     {
-     digitalWrite(SHELF_OFF_PIN, LOW); //
-      digitalWrite(SHELF_ON_PIN, LOW); // 
+      digitalWrite(SHELF_OFF_PIN, LOW); //
+      digitalWrite(SHELF_ON_PIN, LOW);  //
 
       currentState = theGondolaRises;
       time_frist = true;
@@ -419,7 +418,7 @@ void process()
   case theGondolaRises: // 吊箱上升状态
   {
     zPosition = zPosition - stepper1.getDirection() * stepper1.getStepsCompleted(); // 计算出基础位置
-    if(time_data)
+    if (time_data)
     {
       stepper1.startMove(-2 * TOTAL_LENGTH);
       stepper2.startMove(-2 * TOTAL_LENGTH);
